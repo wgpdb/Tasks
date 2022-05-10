@@ -35,7 +35,6 @@ public class TrelloClient {
                 .build()
                 .encode()
                 .toUri();
-
         try {
             TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
             return Optional.ofNullable(boardsResponse)
@@ -46,6 +45,7 @@ public class TrelloClient {
                     .collect(Collectors.toList());
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
+
             return Collections.emptyList();
         }
     }
