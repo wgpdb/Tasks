@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 public class Mail {
 
+    private final String mailFrom;
     private final String mailTo;
     private final String toCc;
     private final String subject;
