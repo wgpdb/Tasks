@@ -25,8 +25,8 @@ public class TrelloClient {
     private final RestTemplate restTemplate;
     private final TrelloConfig trelloConfig;
 
-    public List<TrelloBoardDto> getTrelloBoards() {
-        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/members/" +
+    private URI trelloBoardsUrl() {
+        return UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/members/" +
                         trelloConfig.getTrelloAppUsername() + "/boards")
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
@@ -35,17 +35,23 @@ public class TrelloClient {
                 .build()
                 .encode()
                 .toUri();
+    }
+
+    private List<TrelloBoardDto> boardsResponse(URI url) {
+        TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
+        return Optional.ofNullable(boardsResponse)
+                .map(Arrays::asList)
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(p -> Objects.nonNull(p.getId()) && Objects.nonNull(p.getName()))
+                .collect(Collectors.toList());
+    }
+
+    public List<TrelloBoardDto> getTrelloBoards() {
         try {
-            TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
-            return Optional.ofNullable(boardsResponse)
-                    .map(Arrays::asList)
-                    .orElse(Collections.emptyList())
-                    .stream()
-                    .filter(p -> Objects.nonNull(p.getId()) && Objects.nonNull(p.getName()))
-                    .collect(Collectors.toList());
+            return boardsResponse(trelloBoardsUrl());
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
-
             return Collections.emptyList();
         }
     }
