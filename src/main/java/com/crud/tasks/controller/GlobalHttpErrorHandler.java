@@ -13,4 +13,11 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleTaskNotFoundException(TaskNotFoundException exception) {
         return new ResponseEntity<>("Task with given id does not exist", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(TaskTitleOrContentTooShortException.class)
+    public ResponseEntity<Object> handleTaskTitleOrContentTooShortException
+            (TaskTitleOrContentTooShortException exception) {
+        return new ResponseEntity<>("Task name or content must contain at least 3 letters",
+                HttpStatus.BAD_REQUEST);
+    }
 }

@@ -1,6 +1,7 @@
 package com.crud.tasks.service;
 
 import com.crud.tasks.controller.TaskNotFoundException;
+import com.crud.tasks.controller.TaskTitleOrContentTooShortException;
 import com.crud.tasks.domain.Task;
 import com.crud.tasks.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,12 @@ public class DbService {
         return repository.findById(taskId).orElseThrow(TaskNotFoundException::new);
     }
 
-    public Task saveTask(final Task task) {
-        return repository.save(task);
+    public Task saveTask(final Task task) throws TaskTitleOrContentTooShortException {
+        if (task.getTitle().length() >= 3 && task.getContent().length() >= 3) {
+            return repository.save(task);
+        } else {
+            throw new TaskTitleOrContentTooShortException();
+        }
     }
 
     public void deleteTask(final Long taskId) {
