@@ -28,6 +28,7 @@ class SimpleEmailServiceTest {
                 "Test Message");
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(mail.getMailFrom());
         mailMessage.setTo(mail.getMailTo());
         mailMessage.setSubject(mail.getSubject());
         mailMessage.setText(mail.getMessage());
