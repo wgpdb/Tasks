@@ -1,5 +1,6 @@
 package com.crud.tasks.trello.facade;
 
+import com.crud.tasks.controller.NullObjectMappedException;
 import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TrelloMapper;
 import com.crud.tasks.service.TrelloService;
@@ -17,13 +18,13 @@ public class TrelloFacade {
     private final TrelloMapper trelloMapper;
     private final TrelloValidator trelloValidator;
 
-    public List<TrelloBoardDto> fetchTrelloBoards() {
+    public List<TrelloBoardDto> fetchTrelloBoards() throws NullObjectMappedException {
         List<TrelloBoard> trelloBoards = trelloMapper.mapToBoards(trelloService.fetchTrelloBoards());
         List<TrelloBoard> filteredBoards = trelloValidator.validateTrelloBoards(trelloBoards);
         return trelloMapper.mapToBoardsDto(filteredBoards);
     }
 
-    public CreatedTrelloCardDto createCard(final TrelloCardDto trelloCardDto) {
+    public CreatedTrelloCardDto createCard(final TrelloCardDto trelloCardDto) throws NullObjectMappedException {
         TrelloCard trelloCard = trelloMapper.mapToCard(trelloCardDto);
         trelloValidator.validateCard(trelloCard);
         return trelloService.createTrelloCard(trelloMapper.mapToCardDto(trelloCard));

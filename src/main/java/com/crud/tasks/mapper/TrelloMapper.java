@@ -1,26 +1,39 @@
 package com.crud.tasks.mapper;
 
+import com.crud.tasks.controller.NullObjectMappedException;
 import com.crud.tasks.domain.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
 @Component
 public class TrelloMapper {
 
-    public List<TrelloBoard> mapToBoards(final List<TrelloBoardDto> trelloBoardDto) {
-        return trelloBoardDto.stream()
-                .map(trelloBoard -> new TrelloBoard(trelloBoard.getId(),
-                        trelloBoard.getName(),
-                        mapToList(trelloBoard.getLists())))
-                .collect(toList());
-
+    private Object nullValidator(Object validationObject) throws NullObjectMappedException {
+        return Optional.ofNullable(validationObject).orElseThrow(NullObjectMappedException::new);
     }
 
-    public List<TrelloBoardDto> mapToBoardsDto(final List<TrelloBoard> trelloBoards) {
-        return trelloBoards.stream()
+    private List<?> nullListValidator(List<?> validationList) throws NullObjectMappedException {
+        return Optional.ofNullable(validationList).orElseThrow(NullObjectMappedException::new);
+    }
+
+    public List<TrelloBoard> mapToBoards(final List<TrelloBoardDto> trelloBoardDto) throws NullObjectMappedException {
+        List<TrelloBoardDto> validatedList = (List<TrelloBoardDto>) nullListValidator(trelloBoardDto);
+
+        return validatedList.stream()
+                    .map(trelloBoard -> new TrelloBoard(trelloBoard.getId(),
+                            trelloBoard.getName(),
+                            mapToList(trelloBoard.getLists())))
+                    .collect(toList());
+    }
+
+    public List<TrelloBoardDto> mapToBoardsDto(final List<TrelloBoard> trelloBoards) throws NullObjectMappedException {
+        List<TrelloBoard> validatedList = (List<TrelloBoard>) nullListValidator(trelloBoards);
+
+        return validatedList.stream()
                 .map(trelloBoard -> new TrelloBoardDto(trelloBoard.getId(),
                         trelloBoard.getName(),
                         mapToListDto(trelloBoard.getLists())))
@@ -43,17 +56,21 @@ public class TrelloMapper {
                 .collect(toList());
     }
 
-    public TrelloCardDto mapToCardDto(final TrelloCard trelloCard) {
-        return new TrelloCardDto(trelloCard.getName(),
-                trelloCard.getDescription(),
-                trelloCard.getPos(),
-                trelloCard.getListId());
+    public TrelloCard mapToCard(final TrelloCardDto trelloCardDto) throws NullObjectMappedException {
+        TrelloCardDto validatedTrelloCard = (TrelloCardDto) nullValidator(trelloCardDto);
+
+        return new TrelloCard(trelloCardDto.getName(),
+                validatedTrelloCard.getDescription(),
+                validatedTrelloCard.getPos(),
+                validatedTrelloCard.getListId());
     }
 
-    public TrelloCard mapToCard(final TrelloCardDto trelloCardDto) {
-        return new TrelloCard(trelloCardDto.getName(),
-                trelloCardDto.getDescription(),
-                trelloCardDto.getPos(),
-                trelloCardDto.getListId());
+    public TrelloCardDto mapToCardDto(final TrelloCard trelloCard) throws NullObjectMappedException {
+        TrelloCard validatedTrelloCard = (TrelloCard) nullValidator(trelloCard);
+
+        return new TrelloCardDto(trelloCard.getName(),
+                validatedTrelloCard.getDescription(),
+                validatedTrelloCard.getPos(),
+                validatedTrelloCard.getListId());
     }
 }

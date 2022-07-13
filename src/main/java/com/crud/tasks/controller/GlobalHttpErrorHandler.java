@@ -20,4 +20,10 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("Task name or content must contain at least 3 letters",
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(NullObjectMappedException.class)
+    public ResponseEntity<Object> handleNullObjectMappedException (NullObjectMappedException exception) {
+        return new ResponseEntity<>("Mapped object cannot be null",
+                HttpStatus.BAD_REQUEST);
+    }
 }

@@ -1,5 +1,6 @@
 package com.crud.tasks.trello.mapper;
 
+import com.crud.tasks.controller.NullObjectMappedException;
 import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TrelloMapper;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ public class TrelloMapperTestSuite {
     private TrelloMapper trelloMapper;
 
     @Test
-    void mapToBoardsTest() {
+    void mapToBoardsTest() throws NullObjectMappedException {
         //Given
         TrelloBoardDto trelloBoardDto = new TrelloBoardDto("1", "test", new ArrayList<>());
         List<TrelloBoardDto> trelloBoardDtoList = new ArrayList<>();
@@ -35,7 +36,16 @@ public class TrelloMapperTestSuite {
     }
 
     @Test
-    void mapToBoardsDtoTest() {
+    void mapNullTrelloBoardsDtoToBoardsTest() {
+        //Given & When
+        List<TrelloBoardDto> trelloBoardDtoList = null;
+
+        //Then
+        assertThrows(NullObjectMappedException.class, () -> trelloMapper.mapToBoards(trelloBoardDtoList));
+    }
+
+    @Test
+    void mapToBoardsDtoTest() throws NullObjectMappedException {
         //Given
         TrelloBoard trelloBoard = new TrelloBoard("1", "test", new ArrayList<>());
         List<TrelloBoard> trelloBoardList = new ArrayList<>();
@@ -49,6 +59,15 @@ public class TrelloMapperTestSuite {
         assertEquals("1", trelloBoardDtoList.get(0).getId());
         assertEquals("test", trelloBoardDtoList.get(0).getName());
         assertNotNull(trelloBoardDtoList.get(0).getLists());
+    }
+
+    @Test
+    void mapNullTrelloBoardsToBoardsDtoTest() {
+        //Given & When
+        List<TrelloBoard> trelloBoardsList = null;
+
+        //Then
+        assertThrows(NullObjectMappedException.class, () -> trelloMapper.mapToBoardsDto(trelloBoardsList));
     }
 
     @Test
@@ -86,7 +105,7 @@ public class TrelloMapperTestSuite {
     }
 
     @Test
-    void mapToCardDtoTest() {
+    void mapToCardDtoTest() throws NullObjectMappedException {
         //Given
         TrelloCard trelloCard = new TrelloCard("test", "test description",
                 "test pos", "1");
@@ -102,7 +121,31 @@ public class TrelloMapperTestSuite {
     }
 
     @Test
-    void mapToCardTest() {
+    void mapNullTrelloCardToCardDtoTest() {
+        //Given & When
+        TrelloCard trelloCard = null;
+
+        //Then
+        assertThrows(NullObjectMappedException.class, () -> trelloMapper.mapToCardDto(trelloCard));
+    }
+
+    @Test
+    void mapTrelloCardContainingNullToCardDtoTest() throws NullObjectMappedException {
+        //Given
+        TrelloCard trelloCard = new TrelloCard(null, null, null, null);
+
+        //When
+        TrelloCardDto trelloCardDto = trelloMapper.mapToCardDto(trelloCard);
+
+        //Then
+        assertNull(trelloCardDto.getName());
+        assertNull(trelloCardDto.getDescription());
+        assertNull(trelloCardDto.getPos());
+        assertNull(trelloCardDto.getListId());
+    }
+
+    @Test
+    void mapToCardTest() throws NullObjectMappedException {
         //Given
         TrelloCardDto trelloCardDto = new TrelloCardDto("test", "test description",
                 "test pos", "1");
@@ -115,5 +158,29 @@ public class TrelloMapperTestSuite {
         assertEquals("test description", trelloCard.getDescription());
         assertEquals("test pos", trelloCard.getPos());
         assertEquals("1", trelloCard.getListId());
+    }
+
+    @Test
+    void mapNullTrelloCardDtoToCardTest() {
+        //Given & When
+        TrelloCardDto trelloCardDto = null;
+
+        //Then
+        assertThrows(NullObjectMappedException.class, () -> trelloMapper.mapToCard(trelloCardDto));
+    }
+
+    @Test
+    void mapTrelloCardDtoContainingNullToCardTest() throws NullObjectMappedException {
+        //Given
+        TrelloCardDto trelloCardDto = new TrelloCardDto(null, null, null, null);
+
+        //When
+        TrelloCard trelloCard = trelloMapper.mapToCard(trelloCardDto);
+
+        //Then
+        assertNull(trelloCard.getName());
+        assertNull(trelloCard.getDescription());
+        assertNull(trelloCard.getPos());
+        assertNull(trelloCard.getListId());
     }
 }
