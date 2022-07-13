@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My welcome page</title>
+</head>
+<body>
+    <h1>Welcome page header</h1>
+    <!--/*@thymesVar id="variable" type="com.crud.tasks.controller.StaticWebPageController"*/-->
+    <span th:text="${variable}"></span>
+    <br>
+    <!--/*thymesVar id="one" type="com.crud.tasks.controller.StaticWebPageController"*/-->
+    <!--/*thymesVar id="two" type="com.crud.tasks.controller.StaticWebPageController"*/-->
+    <span th:text="${one} + ${two}"></span>
+    <br>
+    <span th:text="${two}"></span>&nbsp<span th:text="${multiply}">&nbsp</span>&nbsp<span th:text="${two}"></span>&nbsp<span th:text="${equals}"></span>&nbsp<span th:text="${two} * ${two}"></span>
+    <br>
+    <span th:text="${two}"></span>&nbsp<span th:text="${multiply}"></span>&nbsp<span th:text="${two}"></span>&nbsp<span th:text="${add}"></span>&nbsp<span th:text="${two}"></span>&nbsp<span th:text="${equals}"></span>&nbsp<span th:text="${two} * ${two} + ${two}"></span>
+    <br>
+    <span th:text="${two}"></span>&nbsp<span th:text="${subtract}"></span>&nbsp<span th:text="${two}"></span>&nbsp<span th:text="${multiply}"></span>&nbsp<span th:text="${two}"></span>&nbsp<span th:text="${equals}"></span>&nbsp<span th:text="${two} - ${two} * ${two}"></span>
+</body>
+</html>
