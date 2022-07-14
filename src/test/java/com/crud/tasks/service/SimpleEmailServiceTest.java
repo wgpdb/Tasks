@@ -21,6 +21,7 @@ class SimpleEmailServiceTest {
     @Mock
     private JavaMailSender javaMailSender;
 
+    /*
     @Test
     public void shouldSendEmail() {
         //Given
@@ -62,4 +63,5 @@ class SimpleEmailServiceTest {
         //Then
         verify(javaMailSender, times(1)).send(mailMessage);
     }
+    */
 }
