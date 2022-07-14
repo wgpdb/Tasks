@@ -19,7 +19,7 @@ public class MailCreatorService {
     @Qualifier("templateEngine")
     private TemplateEngine templateEngine;
 
-    private final String dayOfWeek = LocalDate.now().getDayOfWeek().name();
+    private final String dayOfWeek = LocalDate.now().getDayOfWeek().name().toLowerCase();
 
     public String buildTrelloCardEmail(String message) {
         Context context = new Context();
@@ -27,7 +27,7 @@ public class MailCreatorService {
         context.setVariable("tasks_url", "https://wgpdb.github.io");
         context.setVariable("button", "Visit website");
         context.setVariable("admin_name", adminConfig.getAdminName());
-
+        context.setVariable("preview_message", message.substring(message.indexOf("\""), message.indexOf("\"")));
         context.setVariable("goodbye_message", "Have a great " + dayOfWeek + "! :-)");
         context.setVariable("company_name", adminConfig.getCompanyName());
 
