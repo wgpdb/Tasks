@@ -33,4 +33,17 @@ public class MailCreatorService {
 
         return templateEngine.process("mail/created-trello-card-mail", context);
     }
+
+    public String buildInfoEmail(String message) {
+        Context context = new Context();
+        context.setVariable("message", message);
+        context.setVariable("tasks_url", "https://wgpdb.github.io");
+        context.setVariable("button", "Visit website");
+        context.setVariable("admin_name", adminConfig.getAdminName());
+        context.setVariable("preview_message", message);
+        context.setVariable("goodbye_message", "Have a great " + dayOfWeek + "! :-)");
+        context.setVariable("company_name", adminConfig.getCompanyName());
+
+        return templateEngine.process("mail/created-trello-card-mail", context);
+    }
 }
